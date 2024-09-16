@@ -27,7 +27,10 @@ public class GameSession {
             return false;
         }
         currLetters.add(c);
-        incrementCurrAttemptsCount();
+
+        if (!answer.contains(c)) {
+            incrementCurrAttemptsCount();
+        }
         return true;
     }
 
