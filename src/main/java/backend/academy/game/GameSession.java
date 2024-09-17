@@ -1,5 +1,6 @@
-package backend.academy;
+package backend.academy.game;
 
+import backend.academy.entity.Word;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;

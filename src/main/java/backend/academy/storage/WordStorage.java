@@ -1,6 +1,6 @@
 package backend.academy.storage;
 
-import backend.academy.Word;
+import backend.academy.entity.Word;
 import backend.academy.enums.Category;
 import backend.academy.enums.Difficulty;
 import java.util.ArrayList;

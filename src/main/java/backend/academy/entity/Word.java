@@ -1,4 +1,4 @@
-package backend.academy;
+package backend.academy.entity;
 
 import backend.academy.enums.Category;
 import backend.academy.enums.Difficulty;

@@ -1,5 +1,6 @@
-package backend.academy;
+package backend.academy.game;
 
+import backend.academy.entity.Word;
 import backend.academy.settings.GameSettings;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;

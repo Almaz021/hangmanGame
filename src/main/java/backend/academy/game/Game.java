@@ -1,5 +1,6 @@
-package backend.academy;
+package backend.academy.game;
 
+import backend.academy.entity.Word;
 import backend.academy.enums.Category;
 import backend.academy.enums.Difficulty;
 import backend.academy.settings.GameSettings;
