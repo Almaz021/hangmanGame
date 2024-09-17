@@ -38,7 +38,7 @@ public class GameInterface {
             Type number of difficulty you want to choose or other symbol to choose random""");
     }
 
-    public void chosenWord(Word word) {
+    public void chosenWord() {
         printMessage("Word is chosen! Game starts now! So, guess a letter:");
     }
 
