@@ -46,6 +46,14 @@ public class GameInterface {
         printMessage("You need to use only english letters! Try again!");
     }
 
+    public void sameLetter() {
+        printMessage("This letter is already used. Try again!");
+    }
+
+    public void showMaxAttemptsCount() {
+        printMessage("You have " + GameSettings.MAX_ATTEMPTS_COUNT + " attempts");
+    }
+
     public void goodAttempt() {
         printMessage("You're Right! Here is the updated word");
     }
