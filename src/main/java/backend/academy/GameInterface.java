@@ -73,7 +73,7 @@ public class GameInterface {
     public void drawHangman(int attemptsCount) {
         int stage =
             (int) Math.floor((double) GameSettings.IMAGES_COUNT / GameSettings.MAX_ATTEMPTS_COUNT * attemptsCount);
-        printMessage(hangman.get(stage));
+        printMessage(hangman.get(Math.max(0, stage - 1)));
     }
 
     public void word(Word word, Set<Character> letters) {
