@@ -1,7 +1,7 @@
 package backend.academy;
 
-import java.io.IOException;
 import backend.academy.game.Game;
+import java.io.IOException;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
