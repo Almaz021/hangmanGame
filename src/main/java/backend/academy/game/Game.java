@@ -8,19 +8,25 @@ import backend.academy.storage.HangmanStorage;
 import backend.academy.storage.WordStorage;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lombok.Getter;
 
 public class Game {
-    private GameSession gameSession;
-    private final WordStorage wordStorage = new WordStorage();
-    private GameInterface gameInterface;
-    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
-    private final SecureRandom random = new SecureRandom();
+    @Getter private GameSession gameSession;
+    private final WordStorage wordStorage;
+    @Getter private GameInterface gameInterface;
+    private final BufferedReader reader;
+    private final SecureRandom random;
+
+    public Game(WordStorage wordStorage, GameInterface gameInterface, BufferedReader reader, SecureRandom random) {
+        this.wordStorage = wordStorage;
+        this.gameInterface = gameInterface;
+        this.reader = reader;
+        this.random = random;
+    }
 
     public void initGame() {
         Category category;
@@ -31,38 +37,13 @@ public class Game {
         try {
             gameInterface.chooseCategory();
             String ctgr = reader.readLine();
-            if (!(ctgr == null)) {
-                category = switch (ctgr) {
-                    case "1" -> Category.SPORTS;
-                    case "2" -> Category.FRUITS;
-                    case "3" -> Category.ANIMALS;
-                    case "4" -> Category.COUNTRIES;
-                    default -> randomCategory();
-                };
-            } else {
-                category = randomCategory();
-            }
+            category = selectCategory(ctgr);
 
             gameInterface.chooseDifficulty();
             String dfclt = reader.readLine();
-            if (!(dfclt == null)) {
-                difficulty = switch (dfclt) {
-                    case "1" -> Difficulty.EASY;
-                    case "2" -> Difficulty.MEDIUM;
-                    case "3" -> Difficulty.HARD;
-                    default -> randomDifficulty();
+            difficulty = selectDifficulty(dfclt);
 
-                };
-            } else {
-                difficulty = randomDifficulty();
-            }
-
-            List<Word> filteredWords = wordStorage.getWords().stream()
-                .filter(word -> word.difficulty() == difficulty && word.category() == category)
-                .toList();
-
-            Word word = filteredWords.get(random.nextInt(filteredWords.size()));
-
+            Word word = chooseWord(difficulty, category);
             Set<Character> uniqueCharacters = new HashSet<>(word.word().length());
             for (char c : word.word().toCharArray()) {
                 uniqueCharacters.add(c);
@@ -79,15 +60,18 @@ public class Game {
 
     }
 
-    private void initGameSession(Word word, Set<Character> wordSet) {
+    public void initGameSession(Word word, Set<Character> wordSet) {
+        if (word.word().length() > GameSettings.MAX_WORD_LENGTH) {
+            throw new RuntimeException("too long word");
+        }
         gameSession = new GameSession(word, wordSet);
     }
 
-    private void initGameInterface() {
+    public void initGameInterface() {
         gameInterface = new GameInterface(HangmanStorage.getHangmanImages());
     }
 
-    public void startGame() throws IOException {
+    public int startGame() throws IOException {
         while (GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount()) {
             gameInterface.guessLetter();
             String letter = reader.readLine();
@@ -111,7 +95,7 @@ public class Game {
             }
 
             if (checkGameOver()) {
-                return;
+                return 0;
             }
 
             if (gameSession.currAttemptsCount() + 1 == GameSettings.MAX_ATTEMPTS_COUNT) {
@@ -119,9 +103,18 @@ public class Game {
             }
         }
         gameInterface.loseGame();
+        return -1;
     }
 
-    private boolean isValidInput(String letter) {
+    public Word chooseWord(Difficulty difficulty, Category category) {
+        List<Word> filteredWords = wordStorage.getWords().stream()
+            .filter(word -> word.difficulty() == difficulty && word.category() == category)
+            .toList();
+
+        return filteredWords.get(random.nextInt(filteredWords.size()));
+    }
+
+    public boolean isValidInput(String letter) {
         return letter != null && checkIsLetter(letter.toLowerCase());
     }
 
@@ -129,7 +122,7 @@ public class Game {
         if (gameSession.answer().contains(letter)) {
             gameInterface.goodAttempt();
         } else {
-            gameInterface.badAttempt();
+            gameInterface.badAttempt(gameSession().currAttemptsCount());
         }
     }
 
@@ -144,6 +137,34 @@ public class Game {
 
     private boolean checkIsLetter(String l) {
         return l.matches("[a-z]");
+    }
+
+    public Category selectCategory(String ctgr) {
+        if (ctgr == null) {
+            return randomCategory();
+        }
+
+        return switch (ctgr) {
+            case "1" -> Category.SPORTS;
+            case "2" -> Category.FRUITS;
+            case "3" -> Category.ANIMALS;
+            case "4" -> Category.COUNTRIES;
+            default -> randomCategory();
+        };
+    }
+
+    public Difficulty selectDifficulty(String dfclt) {
+        if (!(dfclt == null)) {
+            return switch (dfclt) {
+                case "1" -> Difficulty.EASY;
+                case "2" -> Difficulty.MEDIUM;
+                case "3" -> Difficulty.HARD;
+                default -> randomDifficulty();
+
+            };
+        } else {
+            return randomDifficulty();
+        }
     }
 
     private Category randomCategory() {
