@@ -7,82 +7,97 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class GameInterface {
     private final List<String> hangman;
+    @Getter private String currMessage;
     private static final PrintWriter WRITER = new PrintWriter(System.out, true, StandardCharsets.UTF_8);
 
     public void helloMessage() {
-        printMessage(
-            "Hello, Player! Welcome to the Hangman game! Choose the category and the difficulty of the word.");
+        currMessage = "Hello, Player! Welcome to the Hangman game! Choose the category and the difficulty of the word.";
+        printMessage(currMessage);
     }
 
     public void chooseCategory() {
-        printMessage("""
+        currMessage = """
             Category:
             1. Sports
             2. Fruits
             3. Animals
             4. Countries
-            Type number of category you want to choose or other symbol to choose random""");
+            Type number of category you want to choose or other symbol to choose random""";
+        printMessage(currMessage);
 
     }
 
     public void chooseDifficulty() {
-        printMessage("""
+        currMessage = """
             Difficulty:
             1. Easy
             2. Medium
             3. Hard
-            Type number of difficulty you want to choose or other symbol to choose random""");
+            Type number of difficulty you want to choose or other symbol to choose random""";
+        printMessage(currMessage);
     }
 
     public void chosenWord() {
-        printMessage("Word is chosen! Game starts now! So, guess a letter:");
+        currMessage = "Word is chosen! Game starts now! So, guess a letter:";
+        printMessage(currMessage);
     }
 
     public void incorrectAttempt() {
-        printMessage("You need to use only english letters! Try again!");
+        currMessage = "You need to use only english letters! Try again!";
+        printMessage(currMessage);
     }
 
     public void sameLetter() {
-        printMessage("This letter is already used. Try again!");
+        currMessage = "This letter is already used. Try again!";
+        printMessage(currMessage);
     }
 
     public void showMaxAttemptsCount() {
-        printMessage("You have " + GameSettings.MAX_ATTEMPTS_COUNT + " attempts");
+        currMessage = "You have " + GameSettings.MAX_ATTEMPTS_COUNT + " attempts";
+        printMessage(currMessage);
     }
 
     public void goodAttempt() {
-        printMessage("You're Right! Here is the updated word");
+        currMessage = "You're Right! Here is the updated word";
+        printMessage(currMessage);
     }
 
     public void badAttempt() {
-        printMessage("Oh, no! Do you really want him to hang?!");
+        currMessage = "Oh, no! Do you really want him to hang?!";
+        printMessage(currMessage);
     }
 
     public void guessLetter() {
-        printMessage("Guess next letter: ");
+        currMessage = "Guess next letter: ";
+        printMessage(currMessage);
     }
 
     public void showHint(Word word) {
-        printMessage("Your last chance! Here is the hint to this word: " + word.hint());
+        currMessage = "Your last chance! Here is the hint to this word: " + word.hint();
+        printMessage(currMessage);
     }
 
     public void winGame() {
-        printMessage("YOU WON! GOOD GAME!");
+        currMessage = "YOU WON! GOOD GAME!";
+        printMessage(currMessage);
     }
 
     public void loseGame() {
-        printMessage("YOU LOST! Bye, Hangman!");
+        currMessage = "YOU LOST! Bye, Hangman!";
+        printMessage(currMessage);
     }
 
     public void drawHangman(int attemptsCount) {
         int stage =
             (int) Math.floor((double) GameSettings.IMAGES_COUNT / GameSettings.MAX_ATTEMPTS_COUNT * attemptsCount);
-        printMessage(hangman.get(Math.max(0, stage - 1)));
+        currMessage = hangman.get(Math.max(0, stage - 1));
+        printMessage(currMessage);
     }
 
     public void word(Word word, Set<Character> letters) {
@@ -94,9 +109,8 @@ public class GameInterface {
                 list.add("_");
             }
         }
-        String currentWord = String.join(" ", list);
-
-        printMessage(currentWord);
+        currMessage = String.join(" ", list);
+        printMessage(currMessage);
     }
 
     private void printMessage(String msg) {
