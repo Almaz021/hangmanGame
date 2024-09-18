@@ -68,8 +68,10 @@ public class GameInterface {
         printMessage(currMessage);
     }
 
-    public void badAttempt() {
-        currMessage = "Oh, no! Do you really want him to hang?!";
+    public void badAttempt(int attemptsCount) {
+        currMessage = """
+            Oh, no! Do you really want him to hang?!
+            Current attempts:\s""" + (GameSettings.MAX_ATTEMPTS_COUNT - attemptsCount);
         printMessage(currMessage);
     }
 
