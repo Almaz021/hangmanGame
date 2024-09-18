@@ -1,7 +1,14 @@
 package backend.academy;
 
 import backend.academy.game.Game;
+import backend.academy.game.GameInterface;
+import backend.academy.storage.HangmanStorage;
+import backend.academy.storage.WordStorage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
@@ -14,7 +21,11 @@ public class Main {
     }
 
     private void init() {
-        game = new Game();
+        game = new Game(
+            new WordStorage(),
+            new GameInterface(HangmanStorage.getHangmanImages()),
+            new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)),
+            new SecureRandom());
     }
 
     private void start() throws IOException {
