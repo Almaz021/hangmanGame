@@ -1,7 +1,9 @@
 package backend.academy.storage;
 
 import java.util.List;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public final class HangmanStorage {
 
     private static final List<String> HANGMAN_IMAGES = List.of(
@@ -107,9 +109,6 @@ public final class HangmanStorage {
             |
             |"""
     );
-
-    private HangmanStorage() {
-    }
 
     public static List<String> getHangmanImages() {
         return HANGMAN_IMAGES;
