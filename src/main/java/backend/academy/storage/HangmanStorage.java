@@ -1,6 +1,5 @@
 package backend.academy.storage;
 
-import java.util.Collections;
 import java.util.List;
 
 public final class HangmanStorage {
@@ -113,6 +112,6 @@ public final class HangmanStorage {
     }
 
     public static List<String> getHangmanImages() {
-        return Collections.unmodifiableList(HANGMAN_IMAGES);
+        return HANGMAN_IMAGES;
     }
 }
