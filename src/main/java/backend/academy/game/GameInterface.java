@@ -4,9 +4,9 @@ import backend.academy.entity.Word;
 import backend.academy.settings.GameSettings;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -103,15 +103,10 @@ public class GameInterface {
     }
 
     public void word(Word word, Set<Character> letters) {
-        List<String> list = new ArrayList<>();
-        for (int i = 0; i < word.word().length(); i++) {
-            if (letters.contains(word.word().charAt(i))) {
-                list.add(String.valueOf(word.word().charAt(i)));
-            } else {
-                list.add("_");
-            }
-        }
-        currMessage = String.join(" ", list);
+        currMessage = word.word()
+            .chars()
+            .mapToObj(i -> letters.contains((char) i) ? String.valueOf((char) i) : "_")
+            .collect(Collectors.joining(" "));
         printMessage(currMessage);
     }
 
