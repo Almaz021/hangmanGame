@@ -78,7 +78,7 @@ public class Game {
 
     public int startGame() {
         try {
-            while (GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount()) {
+            while (isGameActive()) {
                 gameInterface.guessLetter();
                 String letter = reader.readLine();
 
@@ -100,20 +100,23 @@ public class Game {
                     gameInterface.sameLetter();
                 }
 
-                if (checkGameOver()) {
-                    return 0;
-                }
-
                 if (gameSession.currAttemptsCount() + 1 == GameSettings.MAX_ATTEMPTS_COUNT) {
                     gameInterface.showHint(gameSession.word());
                 }
             }
-            gameInterface.loseGame();
-            return -1;
+            if (checkGameOver()) {
+                return 0;
+            } else {
+                return -1;
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
         return 1;
+    }
+
+    private boolean isGameActive() {
+        return GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount() && !(checkGameOver());
     }
 
     public Word chooseWord(Difficulty difficulty, Category category) {
@@ -139,10 +142,11 @@ public class Game {
     private boolean checkGameOver() {
         if ((gameSession.getCurrLetters().containsAll(gameSession.answer()))) {
             gameInterface.winGame();
-
             return true;
+        } else {
+            gameInterface.loseGame();
+            return false;
         }
-        return false;
     }
 
     private boolean checkIsLetter(String l) {
