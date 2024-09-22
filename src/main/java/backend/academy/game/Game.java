@@ -15,7 +15,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 
+@Log4j2
 public class Game {
     @Getter private GameSession gameSession;
     private final WordStorage wordStorage;
@@ -56,8 +58,8 @@ public class Game {
             gameInterface.showMaxAttemptsCount();
             gameInterface.word(gameSession.word(), gameSession.getCurrLetters());
 
-        } catch (IOException e) {
-            throw new RuntimeException("Unexpected error occurred while reading input", e);
+        } catch (IOException | RuntimeException e) {
+            log.error(e.getMessage());
         }
 
     }
@@ -74,39 +76,44 @@ public class Game {
             new PrintWriter(System.out, true, StandardCharsets.UTF_8));
     }
 
-    public int startGame() throws IOException {
-        while (GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount()) {
-            gameInterface.guessLetter();
-            String letter = reader.readLine();
+    public int startGame() {
+        try {
+            while (GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount()) {
+                gameInterface.guessLetter();
+                String letter = reader.readLine();
 
-            if (!isValidInput(letter)) {
-                gameInterface.incorrectAttempt();
-                continue;
-            }
-
-            letter = letter.toLowerCase();
-            char guessedChar = letter.charAt(0);
-
-            if (gameSession.updateLetters(guessedChar)) {
-                handleGuess(guessedChar);
-                if (gameSession.currAttemptsCount() != 0) {
-                    gameInterface.drawHangman(gameSession.currAttemptsCount());
+                if (!isValidInput(letter)) {
+                    gameInterface.incorrectAttempt();
+                    continue;
                 }
-                gameInterface.word(gameSession.word(), gameSession.getCurrLetters());
-            } else {
-                gameInterface.sameLetter();
-            }
 
-            if (checkGameOver()) {
-                return 0;
-            }
+                letter = letter.toLowerCase();
+                char guessedChar = letter.charAt(0);
 
-            if (gameSession.currAttemptsCount() + 1 == GameSettings.MAX_ATTEMPTS_COUNT) {
-                gameInterface.showHint(gameSession.word());
+                if (gameSession.updateLetters(guessedChar)) {
+                    handleGuess(guessedChar);
+                    if (gameSession.currAttemptsCount() != 0) {
+                        gameInterface.drawHangman(gameSession.currAttemptsCount());
+                    }
+                    gameInterface.word(gameSession.word(), gameSession.getCurrLetters());
+                } else {
+                    gameInterface.sameLetter();
+                }
+
+                if (checkGameOver()) {
+                    return 0;
+                }
+
+                if (gameSession.currAttemptsCount() + 1 == GameSettings.MAX_ATTEMPTS_COUNT) {
+                    gameInterface.showHint(gameSession.word());
+                }
             }
+            gameInterface.loseGame();
+            return -1;
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
-        gameInterface.loseGame();
-        return -1;
+        return 1;
     }
 
     public Word chooseWord(Difficulty difficulty, Category category) {
