@@ -7,6 +7,7 @@ import backend.academy.storage.WordStorage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import lombok.experimental.UtilityClass;
@@ -23,7 +24,8 @@ public class Main {
     private void init() {
         game = new Game(
             new WordStorage(),
-            new GameInterface(HangmanStorage.getHangmanImages()),
+            new GameInterface(HangmanStorage.getHangmanImages(),
+                new PrintWriter(System.out, true, StandardCharsets.UTF_8)),
             new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)),
             new SecureRandom());
     }

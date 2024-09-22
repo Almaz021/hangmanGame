@@ -8,6 +8,8 @@ import backend.academy.storage.HangmanStorage;
 import backend.academy.storage.WordStorage;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +70,8 @@ public class Game {
     }
 
     public void initGameInterface() {
-        gameInterface = new GameInterface(HangmanStorage.getHangmanImages());
+        gameInterface = new GameInterface(HangmanStorage.getHangmanImages(),
+            new PrintWriter(System.out, true, StandardCharsets.UTF_8));
     }
 
     public int startGame() throws IOException {

@@ -10,6 +10,7 @@ import backend.academy.storage.WordStorage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Set;
@@ -29,7 +30,8 @@ public class AllRequiredTest {
     @BeforeEach
     public void setUp() {
         WordStorage wordStorage = new WordStorage();
-        GameInterface gameInterface = new GameInterface(HangmanStorage.getHangmanImages());
+        GameInterface gameInterface = new GameInterface(HangmanStorage.getHangmanImages(),
+            new PrintWriter(System.out, true, StandardCharsets.UTF_8));
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
         SecureRandom random = new SecureRandom();
         game = new Game(wordStorage, gameInterface, reader, random);

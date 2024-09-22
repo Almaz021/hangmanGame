@@ -3,7 +3,6 @@ package backend.academy.game;
 import backend.academy.entity.Word;
 import backend.academy.settings.GameSettings;
 import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 public class GameInterface {
     private final List<String> hangman;
     @Getter private String currMessage;
-    private static final PrintWriter WRITER = new PrintWriter(System.out, true, StandardCharsets.UTF_8);
+    private final PrintWriter writer;
 
     public void helloMessage() {
         currMessage = "Hello, Player! Welcome to the Hangman game! Choose the category and the difficulty of the word.";
@@ -111,7 +110,7 @@ public class GameInterface {
     }
 
     private void printMessage(String msg) {
-        WRITER.println(msg);
+        writer.println(msg);
     }
 
 }
