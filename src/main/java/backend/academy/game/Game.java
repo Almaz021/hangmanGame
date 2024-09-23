@@ -88,7 +88,6 @@ public class Game {
                 String letter = reader.readLine();
 
                 if (!isValidInput(letter)) {
-                    gameInterface.incorrectAttempt();
                     continue;
                 }
 
@@ -109,7 +108,7 @@ public class Game {
                     gameInterface.showHint(gameSession.word());
                 }
             }
-            if (checkGameOver()) {
+            if (checkGameOver(true)) {
                 return 0;
             } else {
                 return -1;
@@ -121,7 +120,7 @@ public class Game {
     }
 
     private boolean isGameActive() {
-        return GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount() && !(checkGameOver());
+        return GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount() && !(checkGameOver(false));
     }
 
     public Word chooseWord(Difficulty difficulty, Category category) {
@@ -133,7 +132,15 @@ public class Game {
     }
 
     public boolean isValidInput(String letter) {
-        return letter != null && checkIsLetter(letter.toLowerCase());
+        if (letter == null || !letter.matches("^[a-zA-Z]+$")) {
+            gameInterface.incorrectSymbols();
+            return false;
+        }
+        if (letter.length() > 1) {
+            gameInterface.incorrectInputLength();
+            return false;
+        }
+        return true;
     }
 
     private void handleGuess(char letter) {
@@ -144,18 +151,18 @@ public class Game {
         }
     }
 
-    private boolean checkGameOver() {
+    private boolean checkGameOver(boolean print) {
         if ((gameSession.getCurrLetters().containsAll(gameSession.answer()))) {
-            gameInterface.winGame();
+            if (print) {
+                gameInterface.winGame();
+            }
             return true;
         } else {
-            gameInterface.loseGame();
+            if (print) {
+                gameInterface.loseGame();
+            }
             return false;
         }
-    }
-
-    private boolean checkIsLetter(String l) {
-        return l.matches("[a-z]");
     }
 
     public Category selectCategory(String ctgr) {

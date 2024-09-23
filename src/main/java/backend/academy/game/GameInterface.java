@@ -47,8 +47,13 @@ public class GameInterface {
         printMessage(currMessage);
     }
 
-    public void incorrectAttempt() {
+    public void incorrectSymbols() {
         currMessage = "You need to use only english letters! Try again!";
+        printMessage(currMessage);
+    }
+
+    public void incorrectInputLength() {
+        currMessage = "You need to use only one english letter! Try again!";
         printMessage(currMessage);
     }
 
