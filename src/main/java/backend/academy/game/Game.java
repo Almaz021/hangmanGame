@@ -4,12 +4,9 @@ import backend.academy.entity.Word;
 import backend.academy.enums.Category;
 import backend.academy.enums.Difficulty;
 import backend.academy.settings.GameSettings;
-import backend.academy.storage.HangmanStorage;
 import backend.academy.storage.WordStorage;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.List;
@@ -25,17 +22,30 @@ public class Game {
     private final BufferedReader reader;
     private final SecureRandom random;
 
-    public Game(WordStorage wordStorage, GameInterface gameInterface, BufferedReader reader, SecureRandom random) {
+    public Game(
+        WordStorage wordStorage,
+        GameInterface gameInterface,
+        BufferedReader reader,
+        SecureRandom random,
+        boolean initNow
+    ) {
         this.wordStorage = wordStorage;
         this.gameInterface = gameInterface;
         this.reader = reader;
         this.random = random;
+
+        if (initNow) {
+            try {
+                initGame();
+            } catch (Exception e) {
+                log.error("Error during game initialization", e);
+            }
+        }
     }
 
-    public void initGame() {
+    public final void initGame() {
         Category category;
         Difficulty difficulty;
-        initGameInterface();
         gameInterface.helloMessage();
 
         try {
@@ -69,11 +79,6 @@ public class Game {
             throw new RuntimeException("too long word");
         }
         gameSession = new GameSession(word, wordSet);
-    }
-
-    public void initGameInterface() {
-        gameInterface = new GameInterface(HangmanStorage.getHangmanImages(),
-            new PrintWriter(System.out, true, StandardCharsets.UTF_8));
     }
 
     public int startGame() {

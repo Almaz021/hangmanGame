@@ -26,11 +26,11 @@ public class Main {
             new GameInterface(HangmanStorage.getHangmanImages(),
                 new PrintWriter(System.out, true, StandardCharsets.UTF_8)),
             new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8)),
-            new SecureRandom());
+            new SecureRandom(),
+            true);
     }
 
     private void start() {
-        game.initGame();
         game.startGame();
     }
 }

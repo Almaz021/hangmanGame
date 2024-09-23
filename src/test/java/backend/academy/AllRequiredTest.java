@@ -8,7 +8,6 @@ import backend.academy.game.GameInterface;
 import backend.academy.storage.HangmanStorage;
 import backend.academy.storage.WordStorage;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -34,7 +33,7 @@ public class AllRequiredTest {
             new PrintWriter(System.out, true, StandardCharsets.UTF_8));
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
         SecureRandom random = new SecureRandom();
-        game = new Game(wordStorage, gameInterface, reader, random);
+        game = new Game(wordStorage, gameInterface, reader, random, false);
     }
 
     // Напишите тесты для проверки правильности выбора слова из списка.
@@ -93,7 +92,6 @@ public class AllRequiredTest {
             Category.FRUITS);
 
         game.initGameSession(word, Set.of('a', 'p', 'l', 'e'));
-        game.initGameInterface();
 
         game.gameSession().updateLetters('a');
         game.gameInterface().word(game.gameSession().word(), game.gameSession().getCurrLetters());
@@ -129,7 +127,6 @@ public class AllRequiredTest {
             Difficulty.EASY,
             Category.FRUITS);
         game.initGameSession(word, Set.of('a', 'p', 'l', 'e'));
-        game.initGameInterface();
 
         game.gameSession().updateLetters('q');
         game.gameInterface().word(game.gameSession().word(), game.gameSession().getCurrLetters());
@@ -251,7 +248,7 @@ public class AllRequiredTest {
 
     // После превышения заданного количества попыток игра всегда возвращает поражение.
     @Test
-    public void maxAttemptsTest() throws IOException {
+    public void maxAttemptsTest() {
         Word word = new Word(
             "apple",
             "A common red or green fruit that keeps the doctor away",
@@ -259,7 +256,6 @@ public class AllRequiredTest {
             Category.FRUITS);
 
         game.initGameSession(word, Set.of('a', 'p', 'l', 'e'));
-        game.initGameInterface();
 
         game.gameSession().updateLetters('q');
         game.gameSession().updateLetters('w');
@@ -286,7 +282,6 @@ public class AllRequiredTest {
             Category.FRUITS);
 
         game.initGameSession(word, Set.of('a', 'p', 'l', 'e'));
-        game.initGameInterface();
 
         game.gameSession().updateLetters('a');
         assertEquals(0, game.gameSession().currAttemptsCount());
