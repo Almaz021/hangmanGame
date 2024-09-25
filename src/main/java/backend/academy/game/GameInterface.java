@@ -3,6 +3,8 @@ package backend.academy.game;
 import backend.academy.entity.Word;
 import backend.academy.settings.GameSettings;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -100,9 +102,16 @@ public class GameInterface {
     }
 
     public void drawHangman(int attemptsCount) {
-        int stage =
-            (int) Math.floor((double) GameSettings.IMAGES_COUNT / GameSettings.MAX_ATTEMPTS_COUNT * attemptsCount);
-        currMessage = hangman.get(Math.max(0, stage - 1));
+        BigDecimal imagesCount = new BigDecimal(GameSettings.IMAGES_COUNT);
+        BigDecimal maxAttemptsCount = new BigDecimal(GameSettings.MAX_ATTEMPTS_COUNT);
+        BigDecimal currentAttempts = new BigDecimal(attemptsCount);
+        BigDecimal one = new BigDecimal("1");
+
+        BigDecimal stage =
+            imagesCount.divide(maxAttemptsCount, GameSettings.NUMBER_SCALE, RoundingMode.UP).multiply(currentAttempts);
+        BigDecimal stageIndex = stage.max(one).subtract(one);
+
+        currMessage = hangman.get(stageIndex.intValue());
         printMessage(currMessage);
     }
 
