@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
-public class Game {
+public final class Game {
     @Getter private GameSession gameSession;
     private final WordStorage wordStorage;
     @Getter private GameInterface gameInterface;
@@ -28,7 +28,7 @@ public class Game {
         BufferedReader reader,
         SecureRandom random,
         boolean initNow
-    ) {
+    ) throws IOException {
         this.wordStorage = wordStorage;
         this.gameInterface = gameInterface;
         this.reader = reader;
@@ -38,12 +38,13 @@ public class Game {
             try {
                 initGame();
             } catch (Exception e) {
-                log.error("Error during game initialization", e);
+                log.error("Error during game initialization");
+                throw e;
             }
         }
     }
 
-    public final void initGame() {
+    public void initGame() throws IOException {
         Category category;
         Difficulty difficulty;
         gameInterface.helloMessage();
@@ -70,6 +71,7 @@ public class Game {
 
         } catch (IOException | RuntimeException e) {
             log.error(e.getMessage());
+            throw e;
         }
 
     }
@@ -81,7 +83,7 @@ public class Game {
         gameSession = new GameSession(word, wordSet);
     }
 
-    public int startGame() {
+    public int startGame() throws IOException {
         try {
             while (isGameActive()) {
                 gameInterface.guessLetter();
@@ -115,8 +117,8 @@ public class Game {
             }
         } catch (Exception e) {
             log.error(e.getMessage());
+            throw e;
         }
-        return 1;
     }
 
     private boolean isGameActive() {

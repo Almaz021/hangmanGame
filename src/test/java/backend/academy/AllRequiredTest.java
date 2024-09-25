@@ -8,6 +8,7 @@ import backend.academy.game.GameInterface;
 import backend.academy.storage.HangmanStorage;
 import backend.academy.storage.WordStorage;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +28,7 @@ public class AllRequiredTest {
     private Game game;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws IOException {
         WordStorage wordStorage = new WordStorage();
         GameInterface gameInterface = new GameInterface(HangmanStorage.getHangmanImages(),
             new PrintWriter(System.out, true, StandardCharsets.UTF_8));
@@ -248,7 +249,7 @@ public class AllRequiredTest {
 
     // После превышения заданного количества попыток игра всегда возвращает поражение.
     @Test
-    public void maxAttemptsTest() {
+    public void maxAttemptsTest() throws IOException {
         Word word = new Word(
             "apple",
             "A common red or green fruit that keeps the doctor away",
@@ -318,5 +319,12 @@ public class AllRequiredTest {
 
         assertFalse(result1);
         assertFalse(result2);
+    }
+
+    @Test
+    public void testf(){
+        game.gameInterface().drawHangman(3);
+        assertEquals(HangmanStorage.getHangmanImages().get(2), game.gameInterface().currMessage());
+
     }
 }
