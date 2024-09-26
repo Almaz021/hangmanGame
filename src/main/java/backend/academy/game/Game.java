@@ -106,7 +106,7 @@ public final class Game {
                     gameInterface.sameLetter();
                 }
 
-                if (gameSession.currAttemptsCount() + 1 == GameSettings.MAX_ATTEMPTS_COUNT) {
+                if (gameSession.currAttemptsCount() + 1 == GameSettings.MAX_ATTEMPTS_COUNT.intValue()) {
                     gameInterface.showHint(gameSession.word());
                 }
             }
@@ -122,7 +122,7 @@ public final class Game {
     }
 
     private boolean isGameActive() {
-        return GameSettings.MAX_ATTEMPTS_COUNT > gameSession.currAttemptsCount() && !(checkGameOver(false));
+        return GameSettings.MAX_ATTEMPTS_COUNT.intValue() > gameSession.currAttemptsCount() && !(checkGameOver(false));
     }
 
     public Word chooseWord(Difficulty difficulty, Category category) {

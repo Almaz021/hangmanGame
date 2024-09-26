@@ -75,9 +75,10 @@ public class GameInterface {
     }
 
     public void badAttempt(int attemptsCount) {
+        BigDecimal currentAttempts = new BigDecimal(attemptsCount);
         currMessage = """
             Oh, no! Do you really want him to hang?!
-            Current attempts:\s""" + (GameSettings.MAX_ATTEMPTS_COUNT - attemptsCount);
+            Current attempts:\s""" + (GameSettings.MAX_ATTEMPTS_COUNT.subtract(currentAttempts));
         printMessage(currMessage);
     }
 
@@ -102,14 +103,12 @@ public class GameInterface {
     }
 
     public void drawHangman(int attemptsCount) {
-        BigDecimal imagesCount = new BigDecimal(GameSettings.IMAGES_COUNT);
-        BigDecimal maxAttemptsCount = new BigDecimal(GameSettings.MAX_ATTEMPTS_COUNT);
         BigDecimal currentAttempts = new BigDecimal(attemptsCount);
-        BigDecimal one = new BigDecimal("1");
 
         BigDecimal stage =
-            imagesCount.divide(maxAttemptsCount, GameSettings.NUMBER_SCALE, RoundingMode.UP).multiply(currentAttempts);
-        BigDecimal stageIndex = stage.max(one).subtract(one);
+            GameSettings.IMAGES_COUNT.divide(GameSettings.MAX_ATTEMPTS_COUNT, GameSettings.NUMBER_SCALE,
+                RoundingMode.UP).multiply(currentAttempts);
+        BigDecimal stageIndex = stage.max(BigDecimal.ONE).subtract(BigDecimal.ONE);
 
         currMessage = hangman.get(stageIndex.intValue());
         printMessage(currMessage);
